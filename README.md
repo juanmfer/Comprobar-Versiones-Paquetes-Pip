@@ -18,7 +18,11 @@ venv\Scripts\activate
 ```
 
 ## Instalación de dependencias
-Ejecuta:
 ```bash
 pip install -r requirements.txt
+```
+
+## Uso
+```bash
+python pypip_check.py requirements.txt
 ```
