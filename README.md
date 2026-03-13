@@ -15,8 +15,10 @@ git clone https://github.com/juanmfer/Comprobar-Versiones-Paquetes-Pip.git
 cd Comprobar-Versiones-Paquetes-Pip
 python -m venv venv
 venv\Scripts\activate
+```
 
 ## Instalación de dependencias
 Ejecuta:
 ```bash
 pip install -r requirements.txt
+```
