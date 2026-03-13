@@ -4,7 +4,7 @@ Este script permite analizar un archivo `requirements.txt` y comprobar:
 
 - Qué versión está instalada en tu entorno.
 - La última versión disponible en PyPI.
-- Si hay que actualizar la linea pip install paquete
+- Si hay que actualizar la linea: pip install paquete
 
 ## Instalación
 
