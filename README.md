@@ -26,3 +26,7 @@ pip install -r requirements.txt
 ```bash
 python pypip_check.py requirements.txt
 ```
+
+## Ejemplo de salida
+
+![Comprobar versiones pip](img/ComprobarversionesPip.png)
