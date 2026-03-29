@@ -14,7 +14,6 @@ import colorama
 from colorama import Fore, Style
 colorama.init(autoreset=True)  # autoreset evita tener que poner RESET cada vez
 
-
 # primero packaging sino pkg_resources
 try:
     from packaging.requirements import Requirement
@@ -23,7 +22,6 @@ try:
 except ImportError:
     import pkg_resources
     USA_PACKAGING = False
-
 
 # Definir colores (colorama)
 COLOR_OK = Fore.GREEN
