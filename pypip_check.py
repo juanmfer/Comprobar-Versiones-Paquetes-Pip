@@ -5,7 +5,6 @@ Ejemplo Windows: python check_requirements.py C:\proyecto\requirements.txt
 """
 
 import sys
-import subprocess
 import requests
 import time
 import random
