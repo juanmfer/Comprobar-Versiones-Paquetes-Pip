@@ -45,52 +45,49 @@ def analizar_linea(linea):
     if '#' in linea:
         linea = linea[:linea.index('#')].strip()
 
+    # packaging si está disponible
     if USA_PACKAGING:
         try:
             req = Requirement(linea)
             return InfoPaquete(req.nombre, str(req.specifier), linea)
         except Exception:
-            # Fallback: línea no válida según packaging, intentar método simple
             pass
 
-    # Método simple con pkg_resources o split manual
+    # pkg_resources como fallback
     try:
-        if USA_PACKAGING:
-            # Si packaging falla se usa pkg_resources
-            req = pkg_resources.Requirement.parse(linea)
-            especificaciones = ','.join(f"{op}{v}" for op, v in req.specs)
-            return InfoPaquete(req.project_name, especificaciones, linea)
-        else:
-            req = pkg_resources.Requirement.parse(linea)
-            especificaciones = ','.join(f"{op}{v}" for op, v in req.specs)
-            return InfoPaquete(req.project_name, especificaciones, linea)
+        import pkg_resources
+        req = pkg_resources.Requirement.parse(linea)
+        especificaciones = ','.join(f"{op}{v}" for op, v in req.specs)
+        return InfoPaquete(req.project_name, especificaciones, linea)
     except Exception:
-        # Separar por operadores comunes
-        import re
-        operadores = r'==|>=|<=|>|<|~=|!='
-        partes = re.split(f'({operadores})', linea, maxsplit=1)
-        if len(partes) >= 2:
-            nombre = partes[0].strip()
-            op = partes[1].strip()
-            version = partes[2].strip() if len(partes) > 2 else ''
-            return InfoPaquete(nombre, f"{op}{version}", linea)
-        else:
-            # Sin especificador
-            return InfoPaquete(nombre, '', linea)
+        pass
+
+    # Fallback manual con expresiones regulares
+    import re
+    operadores = r'==|>=|<=|>|<|~=|!='
+    partes = re.split(f'({operadores})', linea, maxsplit=1)
+    if len(partes) >= 2:
+        nombre = partes[0].strip()
+        op = partes[1].strip()
+        version = partes[2].strip() if len(partes) > 2 else ''
+        return InfoPaquete(nombre, f"{op}{version}", linea)
+    
+    # Si no tiene operadores, asumimos toda la línea es el nombre del paquete
+    return InfoPaquete(linea, '', linea)
 
 def comprobar_version_instalada(package_name):
     """Devuelve la versión instalada del paquete o None."""
+    # Intentamos usar importlib.metadata primero (disponible en Python 3.8+)
     try:
-        if USA_PACKAGING:
-            # Usar importlib.metadata si está disponible - Python 3.8+
-            try:
-                from importlib.metadata import version
-                return version(package_name)
-            except ImportError:
-                # Fallback a pkg_resources
-                return pkg_resources.get_distribution(package_name).version
-        else:
-            return pkg_resources.get_distribution(package_name).version
+        from importlib.metadata import version
+        return version(package_name)
+    except ImportError:
+        pass
+
+    # Fallback a pkg_resources
+    try:
+        import pkg_resources
+        return pkg_resources.get_distribution(package_name).version
     except Exception:
         return None
 
